@@ -1,0 +1,12 @@
+data/
+output/
+models/
+.venv/
+tmp_trainer/
+
+*.npy
+*.csv
+baseline_clustered.csv
+
+
+__pycache__/
