@@ -1,0 +1,9 @@
+sentence-transformers
+pandas
+datasets
+ipywidgets
+accelerate
+google-genai
+umap-learn
+hdbscan
+plotly
