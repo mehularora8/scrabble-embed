@@ -2,9 +2,9 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers.evaluation import InformationRetrievalEvaluator
 from google import genai
 import numpy as np
-from tqdm import tqdm
 import torch
 import time
+import os
 
 class DummyModelCardData:
     """Dummy model card data for Gemini."""
@@ -131,5 +131,5 @@ def run_evaluations(test_dataset, base_model_name, finetuned_path=None, gemini_k
 if __name__ == "__main__":
     from datasets import load_dataset
     test_dataset = load_dataset("csv", data_files="data/indian_words.csv")['train']
-    print(len(test_dataset))
-    run_evaluations(test_dataset, base_model_name="sentence-transformers/all-MiniLM-L6-v2", finetuned_path="mehularora/scrabble-embed-v2", gemini_key="AIzaSyAgTUD2uF5pifWrNh5Hq6Bhe8iBER6n4qk")
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+    run_evaluations(test_dataset, base_model_name="sentence-transformers/all-MiniLM-L6-v2", finetuned_path="mehularora/scrabble-embed-v2", gemini_key=GEMINI_API_KEY)
