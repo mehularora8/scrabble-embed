@@ -34,12 +34,17 @@ def_embedding = model.encode("resembling Don Quixote; impractical")
 
 ```bash
 pip install -r requirements.txt
+python train.py --data_path data/CSW24defs.csv
 ```
 
-Then run the notebook. You'll need to:
-1. Set `DATA_LOCATION` to your CSW24 csv path
-2. Set `FINAL_MODEL_REPO` for local save
-3. Set `REPO_ID` for HuggingFace Hub push
+Optional arguments:
+- `--model_name`: Base model to fine-tune (default: `sentence-transformers/all-MiniLM-L6-v2`)
+- `--batch_size`: Training batch size (default: 64)
+- `--epochs`: Number of training epochs (default: 1)
+- `--push_to_hub`: Push trained model to HuggingFace Hub
+- `--hf_repo_id`: HuggingFace repository ID (required if pushing to hub)
+
+For pushing to HuggingFace Hub, set `HF_TOKEN` in your environment (see `.env.example`).
 
 ## Results
 

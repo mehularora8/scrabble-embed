@@ -8,5 +8,5 @@ tmp_trainer/
 *.csv
 baseline_clustered.csv
 
-
+.env
 __pycache__/

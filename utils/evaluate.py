@@ -1,13 +1,17 @@
+import os
+import time
+import torch
+import numpy as np
+from google import genai
+from datasets import load_dataset
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.evaluation import InformationRetrievalEvaluator
-from google import genai
-import numpy as np
-import torch
-import time
-import os
 
-class DummyModelCardData:
-    """Dummy model card data for Gemini."""
+class ModelCardData:
+    """
+    Dummy model card data for Gemini.
+    This is used to match the interface of the SentenceTransformer model card.
+    """
     def __init__(self):
         self.model_card_data = {}
     
@@ -26,7 +30,7 @@ class GeminiEmbedder:
         self.client = genai.Client(api_key=api_key)
         self.model_name = model_name
         self.similarity_fn_name = 'cosine'
-        self.model_card_data = DummyModelCardData()
+        self.model_card_data = ModelCardData()
 
     def encode(self, sentences, batch_size=100, **kwargs):
         if isinstance(sentences, str):
@@ -92,23 +96,25 @@ def run_evaluations(test_dataset, base_model_name, finetuned_path=None, gemini_k
     results = {}
 
     # Base model
-    # print("\n=== Base Model ===")
-    # base = SentenceTransformer(base_model_name)
-    # results['base'] = evaluator(base)
-    # print(results['base'])
+    print("\n=== Base Model ===")
+    base = SentenceTransformer(base_model_name)
+    results['base'] = evaluator(base)
+    print(results['base'])
 
-    # # Finetuned model
-    # if finetuned_path:
-    #     print("\n=== Finetuned Model ===")
-    #     finetuned = SentenceTransformer(finetuned_path)
-    #     results['finetuned'] = evaluator(finetuned)
-    #     print(results['finetuned'])
+    # Finetuned model
+    if finetuned_path:
+        print("\n=== Finetuned Model ===")
+        finetuned = SentenceTransformer(finetuned_path)
+        results['finetuned'] = evaluator(finetuned)
+        print(results['finetuned'])
+
     # Gemini
     if gemini_key:
         print("\n=== Gemini ===")
         gemini = GeminiEmbedder(gemini_key)
         results['gemini'] = evaluator(gemini)
         print(results['gemini'])
+
     # Print comparison table
     print("\n" + "="*80)
     print("COMPARISON")
@@ -129,7 +135,13 @@ def run_evaluations(test_dataset, base_model_name, finetuned_path=None, gemini_k
     return results
 
 if __name__ == "__main__":
-    from datasets import load_dataset
     test_dataset = load_dataset("csv", data_files="data/indian_words.csv")['train']
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-    run_evaluations(test_dataset, base_model_name="sentence-transformers/all-MiniLM-L6-v2", finetuned_path="mehularora/scrabble-embed-v2", gemini_key=GEMINI_API_KEY)
+    BASE_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+    FINETUNED_PATH = "mehularora/scrabble-embed-v2"
+    run_evaluations(
+        test_dataset, 
+        base_model_name=BASE_MODEL_NAME, 
+        finetuned_path=FINETUNED_PATH, 
+        gemini_key=GEMINI_API_KEY
+    )
